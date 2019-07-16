@@ -30,6 +30,14 @@ ENV["GNUPGHOME"] = WeBTC::Application.config.gpg[:home] + "-test"
 rake db:test:prepare
 rake spec
 spec spec/controllers/transactions_controller_spec.rb
+
+echo "create database bitcoin" | psql
+wget http://dumps.webbtc.com/bitcoin/bitcoin_YYYY-MM-DD.sql.gz
+zcat bitcoin_YYYY-MM-DD.sql.gz | psql bitcoin
+
+curl http://dumps.webbtc.com/bitcoin/bitcoin_YYYY-MM-DD.sql.gz | gunzip | psql bitcoin
+rsync rsync://dumps.webbtc.com/dumps/
+bitcoin_node -n bitcoin -s archive::postgres:/bitcoin
 ```
 
 ```
